@@ -4,6 +4,27 @@ Internal tooling that connects **ten MCP servers** to a local **OpenClaw** agent
 
 ---
 
+## Branching Prefixes:
+
+* only branch from `playgrond`
+
+* prefixes: 
+  * `feat/`
+  * `bug/`
+  * `fix/`
+
+* protocol: 
+
+  * `prefix/`-descript-of-branch---branch.branched.from
+
+  * examples: 
+
+    * `feat/-adds-cool-newe-mcp---playground`
+    * `fix/-some-useful-makefile-change---playground`
+    * `bug/-an-unblocking-tool-fix---playground`
+
+---
+
 ## Contents
 
 - [Project structure](#project-structure)
