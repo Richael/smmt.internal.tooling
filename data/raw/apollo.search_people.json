@@ -1,0 +1,4 @@
+{"source":"apollo","tool":"search_people","data":{"people":[
+  {"id":"p1","first_name":"Dana","last_name":"Lee","email":"dana@acme.io","title":"VP Marketing","linkedin_url":"https://linkedin.com/in/danalee","city":"Austin","state":"TX","country":"USA","organization":{"name":"Acme","primary_domain":"acme.io"},"phone_numbers":[{"sanitized_number":"+15125550001"}]},
+  {"id":"p2","first_name":"Sam","last_name":"Ng","email":"sam@globex.com","title":"Director of Growth","organization":{"name":"Globex","website_url":"globex.com"}}
+]}}

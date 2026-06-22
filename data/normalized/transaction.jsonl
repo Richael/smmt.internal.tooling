@@ -1,0 +1,1 @@
+{"entity_type": "transaction", "id": "d1", "source": "hubspot", "source_tool": "crm_deals_search", "attributes": {"name": "Acme annual", "amount": "24000", "currency": "USD", "status": "closedwon", "occurred_at": "2026-05-30", "channel": "hubspot"}, "extracted_at": "2026-06-22T16:39:12Z", "schema_version": "1.0"}

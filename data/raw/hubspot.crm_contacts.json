@@ -1,0 +1,4 @@
+{"source":"hubspot","tool":"crm_contacts_search","data":{"results":[
+  {"id":"101","properties":{"email":"jo@northwind.com","firstname":"Jo","lastname":"Park","jobtitle":"Head of RevOps","company":"Northwind","lifecyclestage":"lead","city":"Denver"}},
+  {"id":"102","properties":{"email":"kit@umbrella.co","firstname":"Kit","lastname":"Rao","lifecyclestage":"customer"}}
+]}}
