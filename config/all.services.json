@@ -1,0 +1,71 @@
+{
+  "mcpServers": {
+    "apollo": {
+      "command": "node",
+      "args": ["${APOLLO_MCP_PATH}"],
+      "env": { "APOLLO_API_KEY": "${APOLLO_API_KEY}" }
+    },
+    "hubspot": {
+      "command": "npx",
+      "args": ["-y", "@shinzo-labs/hubspot-mcp"],
+      "env": { "HUBSPOT_ACCESS_TOKEN": "${HUBSPOT_ACCESS_TOKEN}" }
+    },
+    "linkedin": {
+      "command": "uvx",
+      "args": ["linkedin-scraper-mcp"],
+      "env": { "LINKEDIN_COOKIE": "${LINKEDIN_COOKIE}" }
+    },
+    "upwork": {
+      "command": "npx",
+      "args": ["-y", "@chinchillaenterprises/mcp-upwork"],
+      "env": { "UPWORK_ACCESS_TOKEN": "${UPWORK_ACCESS_TOKEN}" }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@isaacphi/mcp-gdrive"],
+      "env": {
+        "CLIENT_ID": "${GDRIVE_CLIENT_ID}",
+        "CLIENT_SECRET": "${GDRIVE_CLIENT_SECRET}",
+        "GDRIVE_CREDS_DIR": "${GDRIVE_CREDS_DIR}"
+      }
+    },
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@gongrzhe/server-gmail-autoauth-mcp"]
+    },
+    "meta-ads": {
+      "command": "npx",
+      "args": ["-y", "@mikusnuz/meta-ads-mcp"],
+      "env": {
+        "META_ADS_ACCESS_TOKEN": "${META_ADS_ACCESS_TOKEN}",
+        "META_AD_ACCOUNT_ID": "${META_AD_ACCOUNT_ID}",
+        "META_APP_ID": "${META_APP_ID}",
+        "META_APP_SECRET": "${META_APP_SECRET}",
+        "META_BUSINESS_ID": "${META_BUSINESS_ID}"
+      }
+    },
+    "x": {
+      "command": "npx",
+      "args": ["-y", "@enescinar/twitter-mcp"],
+      "env": {
+        "API_KEY": "${X_API_KEY}",
+        "API_SECRET_KEY": "${X_API_SECRET}",
+        "ACCESS_TOKEN": "${X_ACCESS_TOKEN}",
+        "ACCESS_TOKEN_SECRET": "${X_ACCESS_TOKEN_SECRET}"
+      }
+    },
+    "youtube": {
+      "command": "npx",
+      "args": ["-y", "zubeid-youtube-mcp-server"],
+      "env": { "YOUTUBE_API_KEY": "${YOUTUBE_API_KEY}" }
+    },
+    "youtube-ads": {
+      "command": "pipx",
+      "args": ["run", "--spec", "git+https://github.com/googleads/google-ads-mcp.git", "google-ads-mcp"],
+      "env": {
+        "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}",
+        "GOOGLE_ADS_DEVELOPER_TOKEN": "${GOOGLE_ADS_DEVELOPER_TOKEN}"
+      }
+    }
+  }
+}
