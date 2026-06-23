@@ -16,6 +16,10 @@ config/all.services.rendered.json
 data/*
 !data/.gitignore
 
+# python
+__pycache__/
+*.py[cod]
+
 # os / editor
 .DS_Store
 .idea/

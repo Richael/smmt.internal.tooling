@@ -14,9 +14,14 @@ RENDERED     := config/all.services.rendered.json
 OPENCLAW_CFG := $(HOME)/.openclaw/openclaw.json
 REQUIRED_TOOLS := node npm npx uv uvx pipx jq perl openclaw mcporter
 
+NORMALIZE    := tools/extractors/normalize.py
+RAW_DIR      := data/raw
+NORM_DIR     := data/normalized
+EXAMPLES_DIR := tools/extractors/examples/raw
+
 .DEFAULT_GOAL := help
 .PHONY: help doctor install env check-env render config load verify \
-        auth-gmail auth-gdrive auth-youtube upwork-login clean all
+        normalize validate auth-gmail auth-gdrive auth-youtube upwork-login clean all
 
 help: ## Show this help
 	@echo "smmt-internal-tooling — make targets:"
@@ -78,6 +83,13 @@ load: config ## Alias for 'config'
 verify: ## List the MCP servers OpenClaw can see
 	@command -v openclaw >/dev/null 2>&1 || { echo "openclaw not found — install it first"; exit 1; }
 	openclaw mcp list
+
+normalize: ## Map raw MCP output -> normalized records (data/raw -> data/normalized, +CSV)
+	@test -d $(RAW_DIR) || { echo "Missing $(RAW_DIR)/ — let OpenClaw save raw tool output there first"; exit 1; }
+	python3 $(NORMALIZE) --input $(RAW_DIR) --out $(NORM_DIR) --csv
+
+validate: ## Normalize the bundled sample fixtures (no live keys) -> /tmp/norm
+	python3 $(NORMALIZE) --input $(EXAMPLES_DIR) --out /tmp/norm --csv
 
 auth-gmail: ## One-time Gmail OAuth (browser). Put gcp-oauth.keys.json in ~/.gmail-mcp/
 	@mkdir -p $$HOME/.gmail-mcp
