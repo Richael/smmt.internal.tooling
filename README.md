@@ -276,3 +276,7 @@ See `docs/mcp.openclaw.setup.guide.docx` → *"The 'list to asset to lookalike' 
 `docs/mcp.openclaw.setup.guide.docx` is the complete reference: per-service official vs community servers, a Can-do / Cannot-do breakdown per server, token generation, config entries, the cross-platform workflow analysis, and an *"Answers to your specific questions"* section.
 
 *Compiled mid-2026 — MCP servers, package names, auth rules, and ad-API policies change frequently; re-verify before deploying.*
+
+## Further reading
+
+- [awesome-openclaw-skills — Media & Streaming](https://github.com/VoltAgent/awesome-openclaw-skills/blob/main/categories/media-and-streaming.md) — community catalog of OpenClaw skills for audio/video, social content, transcription, and entertainment platforms.
