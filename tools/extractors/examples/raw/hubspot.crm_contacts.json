@@ -1,0 +1,4 @@
+{"source":"hubspot","tool":"crm_contacts_search","data":{"results":[
+  {"id":"ex_101","properties":{"email":"robin@northstar.com","firstname":"Robin","lastname":"Vega","jobtitle":"RevOps Lead","company":"Northstar","phone":"+13035550111","city":"Denver","lifecyclestage":"lead"}},
+  {"id":"ex_102","properties":{"email":"quinn@harbor.co","firstname":"Quinn","lastname":"Ito","lifecyclestage":"customer","hs_lead_status":"OPEN"}}
+]}}

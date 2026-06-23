@@ -1,0 +1,3 @@
+{"source":"apollo","tool":"search_organizations","data":{"organizations":[
+  {"id":"ex_o1","name":"ExampleCorp","primary_domain":"examplecorp.com","website_url":"https://examplecorp.com","industry":"software","estimated_num_employees":240,"city":"Seattle","linkedin_url":"https://linkedin.com/company/examplecorp"}
+]}}
