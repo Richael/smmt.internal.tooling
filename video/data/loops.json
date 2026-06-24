@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "title": "The Twelve Compounding Closed Loops",
+    "subtitle": "Shopify · Klaviyo · Meta / Instagram · Amazon Marketplace",
+    "source": "playbooks--001.parker.docx — Closed-Loop Integration Architecture (Michael Rinaldi, Solutions Engineering, smmt)",
+    "tagline": "A closed loop means data leaves one system, is acted on in another, and returns as a converted customer or enriched signal — so each cycle improves the next.",
+    "principles": [
+      "The walled-garden rule — audience lists only ever flow outbound to Meta; loops close on converters and aggregate signal, never on extracted membership.",
+      "Email is the universal join key — Shopify email ↔ Klaviyo email ↔ Meta EMAIL_SHA256; build canonicalization once.",
+      "Lookalike expansion is a Meta-side primitive — we supply the seed, Meta expands it.",
+      "Loops close on signal, not symmetry — the return leg is a different mechanism than the outbound leg.",
+      "The Amazon wall is stricter — no email egress; lists feed inbound only, engagement happens on-platform."
+    ]
+  },
+  "legend": {
+    "shopify": { "label": "Shopify", "color": "#95BF47" },
+    "klaviyo": { "label": "Klaviyo", "color": "#1A1A1A" },
+    "meta": { "label": "Meta / IG", "color": "#0866FF" },
+    "amazon": { "label": "Amazon", "color": "#FF9900" },
+    "multi": { "label": "Multi-channel", "color": "#6B7280" },
+    "smmt": { "label": "smmt core", "color": "#7C5CFF" },
+    "return": { "label": "Loop-closing return", "color": "#B7A8F2" }
+  },
+  "loops": [
+    {
+      "id": 1,
+      "title": "Attribution → Segment → Re-seed",
+      "short": "Attribution → “Acquired-via” Segment → Lookalike Re-seed",
+      "systems": ["shopify", "klaviyo", "meta"],
+      "closes": "UTM attribution on new orders",
+      "segment": "Both",
+      "latency": "Hours (sync)",
+      "section": "§6",
+      "objective": "For every order, capture its marketing attribution, classify the customer into an “acquired via {channel}” cohort, sync high-value cohorts to Meta as custom audiences, spawn lookalikes, and let resulting new orders re-enter with their own UTM — compounding seed quality each cycle.",
+      "trigger": "Shopify orders/paid webhook (HMAC verified)",
+      "legs": [
+        "Read attribution — fetch order.customerJourneySummary via Admin GraphQL (poll until ready)",
+        "Classify by UTM source/medium/campaign; write back tag acq:{source}:{campaign} + Klaviyo event",
+        "Define the seed segment in Klaviyo (acquisition AND high predicted CLV)",
+        "Sync segment → Meta Custom Audience (email-only, one-way)",
+        "Create Lookalike → attach to FB + IG ad sets with UTM-tagged URLs",
+        "New lookalike shoppers purchase → orders/paid fires → loop compounds"
+      ],
+      "edge": "customerJourneySummary.ready may be false — poll with backoff; null UTMs route to a “direct/unknown” bucket, never dropped."
+    },
+    {
+      "id": 2,
+      "title": "Purchase → Post-purchase → Repurchase",
+      "short": "Purchase → Post-purchase → Repurchase",
+      "systems": ["shopify", "klaviyo"],
+      "closes": "Repeat purchase",
+      "segment": "Both",
+      "latency": "Real-time → days",
+      "section": "§7",
+      "objective": "Convert a first purchase into a retention / repurchase cycle.",
+      "trigger": "Shopify orders/paid → Klaviyo Placed Order (native)",
+      "legs": [
+        "Klaviyo flow on Placed Order — thank-you → cross-sell → replenishment timer",
+        "Flow generates a unique Shopify discount code synced into the email",
+        "Redemption creates a new orders/paid → re-enter"
+      ],
+      "edge": "Coupon collision/reuse; refunded orders (refunds/create) must exit the flow; subscription orders may double-fire."
+    },
+    {
+      "id": 3,
+      "title": "Abandoned-checkout multi-channel recovery",
+      "short": "Abandoned-checkout multi-channel recovery",
+      "systems": ["shopify", "klaviyo", "meta"],
+      "closes": "Recovered order",
+      "segment": "B2C-heavy",
+      "latency": "Minutes → hours",
+      "section": "§7",
+      "objective": "Recover abandoned checkouts across email/SMS and paid retargeting simultaneously.",
+      "trigger": "Shopify checkouts/create + checkouts/update → Klaviyo Started Checkout",
+      "legs": [
+        "Klaviyo abandoned-cart flow (email + SMS)",
+        "Cart-abandoner segment → Meta custom audience for FB/IG retargeting",
+        "Recovery → orders/paid",
+        "On purchase, exit both the flow and (next sync) the audience"
+      ],
+      "edge": "24h relative-time lag; gate with “has not placed order since checkout”; SMS consent required before the SMS leg."
+    },
+    {
+      "id": 4,
+      "title": "Lead-gen nurture (Meta/IG → customer)",
+      "short": "Lead-gen nurture (Meta/IG → customer) — B2B-critical",
+      "systems": ["meta", "klaviyo", "shopify"],
+      "closes": "Lead → first order",
+      "segment": "B2B-critical",
+      "latency": "Real-time → weeks",
+      "section": "§7",
+      "objective": "Capture paid-social leads, nurture to first purchase, attribute back, and re-seed acquisition.",
+      "trigger": "Meta/Instagram Instant Form submission → leadgen",
+      "legs": [
+        "Klaviyo native lead-ad sync drops the lead into a Klaviyo list (real-time)",
+        "Klaviyo nurture flow",
+        "Conversion → Shopify customer/order",
+        "Order UTM (Loop 1) attributes the campaign; converters feed the high-LTV seed"
+      ],
+      "edge": "Lead quality/spam — add validation + double opt-in; long B2B cycles need lead-status sync; report offline CRM-closed deals via CAPI offline."
+    },
+    {
+      "id": 5,
+      "title": "Server-side conversion optimization (CAPI)",
+      "short": "Server-side conversion optimization (CAPI)",
+      "systems": ["shopify", "meta"],
+      "closes": "Conversion signal",
+      "segment": "Both",
+      "latency": "Real-time",
+      "section": "§7",
+      "objective": "Feed clean server-side conversion signal to Meta’s optimizer to improve delivery and resilience to ad-blockers / iOS.",
+      "trigger": "Purchase / lead / checkout events",
+      "legs": [
+        "Shopify “Facebook & Instagram by Meta” channel (data sharing = Maximum) emits CAPI Purchase server-side",
+        "Pixel emits the browser counterpart",
+        "Both carry the same event_id → Meta dedups",
+        "Optimizer improves who-sees-ads → more conversions → more events"
+      ],
+      "edge": "event_id divergence is the dominant failure — pick ONE authoritative CAPI sender; verify in Events Manager Test Events."
+    },
+    {
+      "id": 6,
+      "title": "Suppression / exclusion hygiene",
+      "short": "Suppression / exclusion hygiene",
+      "systems": ["shopify", "klaviyo", "meta"],
+      "closes": "Spend efficiency",
+      "segment": "Both",
+      "latency": "Hours",
+      "section": "§7",
+      "objective": "Stop paying to prospect existing customers; concentrate spend on net-new.",
+      "trigger": "New purchase (orders/paid) / consent change",
+      "legs": [
+        "Recent purchasers + existing-customer segment → Meta exclusion custom audience",
+        "Prospecting/lookalike ad sets exclude it",
+        "Net-new converts → enters Shopify/Klaviyo → added to suppression next cycle"
+      ],
+      "edge": "Stale exclusions (sync lag); opt-outs must also be removed from inclusion audiences (Loop 8); attach exclusion to the right ad sets."
+    },
+    {
+      "id": 7,
+      "title": "Predictive value tiering",
+      "short": "Predictive value tiering",
+      "systems": ["klaviyo", "meta"],
+      "closes": "Re-tiering on outcome",
+      "segment": "B2C-heavy",
+      "latency": "Daily",
+      "section": "§7",
+      "objective": "Let Klaviyo’s ML route customers to acquisition vs retention treatments, and re-score on outcome.",
+      "trigger": "Klaviyo predictive analytics refresh (CLV, churn-risk, next-order date)",
+      "legs": [
+        "High-predicted-CLV segment → Meta lookalike seed + VIP flow",
+        "High-churn-risk segment → win-back flow + Meta retargeting",
+        "Outcomes (purchase / lapse) update predictions → re-tier"
+      ],
+      "edge": "Predictions need order history (cold-start); small B2B lists may not produce stable predictions; avoid daily audience thrash."
+    },
+    {
+      "id": 8,
+      "title": "Consent / identity propagation",
+      "short": "Consent / identity propagation — compliance loop",
+      "systems": ["klaviyo", "shopify", "meta"],
+      "closes": "Compliance state",
+      "segment": "Both",
+      "latency": "Near-real-time",
+      "section": "§7",
+      "objective": "Keep consent and identity state consistent across Shopify/Klaviyo/Meta (GDPR/CCPA + Meta obligations).",
+      "trigger": "Klaviyo consent events (unsubscribe, SMS opt-out); Shopify customers/update",
+      "legs": [
+        "Consent webhook → remove profile from mapped Meta custom audiences + flag in Shopify + suppress in Klaviyo",
+        "Shopify profile change → update Klaviyo profile → re-sync to Meta next cycle"
+      ],
+      "edge": "System-webhook tier gating (Advanced KDP/partner); Meta requires removing opted-out users; email/phone changes orphan prior hashes (re-hash + re-sync)."
+    },
+    {
+      "id": 9,
+      "title": "Off-Amazon demand → Amazon conversion",
+      "short": "Off-Amazon demand → Amazon conversion",
+      "systems": ["meta", "shopify", "amazon"],
+      "closes": "Amazon purchase (Attribution)",
+      "segment": "Both",
+      "latency": "14-day window",
+      "section": "§8",
+      "objective": "Prove and grow the on-Amazon ROI of off-Amazon demand, then recycle the signal.",
+      "trigger": "smmt-run Meta/IG + email (and Shopify) campaigns pointing at Amazon listings / Store",
+      "legs": [
+        "Wrap destination URLs with Amazon Attribution tags (Ads API)",
+        "Amazon measures clicks → DPV → ATC → purchase + new-to-brand (14-day last-touch)",
+        "smmt pulls Attribution reports, mirrors conversions to Meta CAPI offline, reallocates spend",
+        "Non-converters retargeted via Amazon DSP; Brand Referral Bonus returns ~10% of attributed sales"
+      ],
+      "edge": "No pixel on Amazon → tag hygiene is everything; 14-day last-touch only; requires Brand Registry + Professional Seller."
+    },
+    {
+      "id": 10,
+      "title": "Cross-platform syndication & lookalike fan-out",
+      "short": "Cross-platform syndication & lookalike fan-out — the reuse engine",
+      "systems": ["smmt", "meta", "amazon"],
+      "closes": "Seed grows + lookalikes",
+      "segment": "Both",
+      "latency": "1–2 days",
+      "section": "§8",
+      "objective": "Make one first-party audience reusable everywhere and let every platform expand it.",
+      "trigger": "Any change to smmt’s canonical audience (new orders, Klaviyo segment / predictive updates)",
+      "legs": [
+        "smmt holds the canonical first-party audience (normalized + hashed)",
+        "Fan it out to a Meta Custom Audience AND an Amazon Advertiser Audience (+ AMC)",
+        "Build lookalikes natively on both Meta and Amazon DSP",
+        "Converters land back in Shopify (email-joinable) or Amazon (measured via Loop 9) — seed grows each cycle"
+      ],
+      "edge": "Match rates differ (40–70%); Amazon lookalike seed ≥ 1,000 matched; Amazon converters cannot be email-joined; keep suppression in sync (Loop 6)."
+    },
+    {
+      "id": 11,
+      "title": "Amazon-native retention & win-back",
+      "short": "Amazon-native retention & win-back",
+      "systems": ["amazon"],
+      "closes": "Amazon repurchase",
+      "segment": "B2C-heavy",
+      "latency": "Days",
+      "section": "§8",
+      "objective": "Retain and win back Amazon customers you cannot email — entirely Amazon-side.",
+      "trigger": "Amazon purchase / brand follow (and Brand Tailored Promotions audience membership)",
+      "legs": [
+        "Enroll repeat-purchase ASINs in Subscribe & Save (recurring revenue)",
+        "Issue Brand Tailored Promotions %-off codes to Amazon-built segments (Repeat, High-Spend, Cart Abandoners, At-Risk, Brand Followers)",
+        "Repurchase re-enrolls the customer into the relevant segments"
+      ],
+      "edge": "No PII/email export — engagement is Amazon on-platform only; discount funds the promo (watch margin); audiences overlap, one promo per purchase."
+    },
+    {
+      "id": 12,
+      "title": "Unified profile & insight enrichment",
+      "short": "Unified profile & insight enrichment",
+      "systems": ["smmt", "shopify", "klaviyo", "meta", "amazon"],
+      "closes": "Better targeting everywhere",
+      "segment": "Both",
+      "latency": "Daily",
+      "section": "§8",
+      "objective": "Unify signal across all four systems into reusable insight that sharpens targeting everywhere.",
+      "trigger": "Ongoing ingestion of Shopify orders, Klaviyo profiles/events/predictions, Meta delivery + CAPI, Amazon SP-API + Ads/AMC signals",
+      "legs": [
+        "smmt ingests and resolves identity where possible (email graph + pseudonymous Amazon aggregates)",
+        "AMC clean-room SQL joins first-party data with Amazon signals to reveal cross-channel journeys",
+        "Unified profiles + predictive inform which segments and lookalikes to build",
+        "Better segments feed Loops 1 / 7 / 10 → improved targeting lifts the signal flowing back in"
+      ],
+      "edge": "Amazon identity is a hard boundary — aggregate/pseudonymous only; AMC outputs are privacy-thresholded; do not over-claim unified identity."
+    }
+  ]
+}
