@@ -74,6 +74,15 @@
     "excalidraw": {
       "command": "npx",
       "args": ["-y", "@cmd8/excalidraw-mcp"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "fal": {
+      "command": "uvx",
+      "args": ["--from", "fal-mcp-server", "fal-mcp"],
+      "env": { "FAL_KEY": "${FAL_KEY}" }
     }
   }
 }
