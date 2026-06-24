@@ -66,6 +66,14 @@
         "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}",
         "GOOGLE_ADS_DEVELOPER_TOKEN": "${GOOGLE_ADS_DEVELOPER_TOKEN}"
       }
+    },
+    "remotion": {
+      "command": "npx",
+      "args": ["-y", "@remotion/mcp@latest"]
+    },
+    "excalidraw": {
+      "command": "npx",
+      "args": ["-y", "@cmd8/excalidraw-mcp"]
     }
   }
 }
