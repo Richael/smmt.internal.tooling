@@ -31,7 +31,7 @@ make verify                      # openclaw mcp list — all 10 servers should a
 ## Secret naming (key == env var name, 1:1)
 
 `bws run` exposes each secret as an env var **named exactly its Bitwarden key**, and the
-services template substitutes those names. So create these 18 secrets with these exact keys:
+services template substitutes those names. So create these 19 secrets with these exact keys:
 
 | Bitwarden secret key | Service | Notes |
 |---|---|---|
@@ -45,6 +45,9 @@ services template substitutes those names. So create these 18 secrets with these
 | `X_API_KEY` / `X_API_SECRET` / `X_ACCESS_TOKEN` / `X_ACCESS_TOKEN_SECRET` | X | organic only |
 | `YOUTUBE_API_KEY` | YouTube | Data API v3 key |
 | `GOOGLE_PROJECT_ID` / `GOOGLE_ADS_DEVELOPER_TOKEN` | YouTube Ads | read-only server |
+| `FAL_KEY` | Fal.ai | image/video/audio generation (new in Task 004) |
+
+> `remotion`, `excalidraw`, and `playwright` (also added in Task 004) need **no secrets**.
 
 Stay in `envs/.env` (NOT secret, per-machine): `APOLLO_MCP_PATH`, `GDRIVE_CREDS_DIR`.
 
