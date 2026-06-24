@@ -1,0 +1,1 @@
+{"entity_type": "audience", "id": "UC123:subscribers", "source": "youtube", "source_tool": "get_channel", "attributes": {"name": "Wax Future subscribers", "platform": "youtube", "type": "subscribers", "size": 15400}, "extracted_at": "2026-06-22T16:39:12Z", "schema_version": "1.0"}

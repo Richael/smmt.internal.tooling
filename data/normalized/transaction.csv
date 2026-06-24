@@ -1,0 +1,2 @@
+id,source,source_tool,extracted_at,amount,currency,status,occurred_at,customer_email,customer_id,channel,line_items,name
+d1,hubspot,crm_deals_search,2026-06-22T16:39:12Z,24000,USD,closedwon,2026-05-30,,,hubspot,,Acme annual

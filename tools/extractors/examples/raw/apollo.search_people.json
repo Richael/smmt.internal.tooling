@@ -1,0 +1,4 @@
+{"source":"apollo","tool":"search_people","data":{"people":[
+  {"id":"ex_p1","first_name":"Avery","last_name":"Stone","email":"avery@examplecorp.com","title":"Head of Partnerships","linkedin_url":"https://linkedin.com/in/averystone","city":"Seattle","state":"WA","country":"USA","organization":{"name":"ExampleCorp","primary_domain":"examplecorp.com"},"phone_numbers":[{"sanitized_number":"+12065550100"}]},
+  {"id":"ex_p2","first_name":"Blair","last_name":"Mehta","email":"blair@samplelabs.io","title":"Founder","organization":{"name":"Sample Labs","website_url":"samplelabs.io"}}
+]}}

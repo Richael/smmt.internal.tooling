@@ -1,0 +1,1 @@
+{"entity_type": "behavior_event", "id": "vid9", "source": "youtube", "source_tool": "search_videos", "attributes": {"type": "video_stats", "occurred_at": "2026-06-01T10:00:00Z", "object_ref": "Tour vlog 3", "count": 42100, "metadata": {"video_id": "vid9", "likes": 3100, "comments": 180, "channel": "Wax Future"}}, "extracted_at": "2026-06-22T16:39:12Z", "schema_version": "1.0"}
