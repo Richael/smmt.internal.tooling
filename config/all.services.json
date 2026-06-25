@@ -83,6 +83,18 @@
       "command": "uvx",
       "args": ["--from", "fal-mcp-server", "fal-mcp"],
       "env": { "FAL_KEY": "${FAL_KEY}" }
+    },
+    "google-analytics": {
+      "command": "pipx",
+      "args": ["run", "analytics-mcp"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}",
+        "GOOGLE_PROJECT_ID": "${GOOGLE_PROJECT_ID}"
+      }
+    },
+    "cloudflare-observability": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://observability.mcp.cloudflare.com/mcp"]
     }
   }
 }

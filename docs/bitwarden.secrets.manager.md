@@ -46,10 +46,15 @@ services template substitutes those names. So create these 19 secrets with these
 | `YOUTUBE_API_KEY` | YouTube | Data API v3 key |
 | `GOOGLE_PROJECT_ID` / `GOOGLE_ADS_DEVELOPER_TOKEN` | YouTube Ads | read-only server |
 | `FAL_KEY` | Fal.ai | image/video/audio generation (new in Task 004) |
+| `GOOGLE_PROJECT_ID` | Google Analytics | reused by the GA4 server (same secret as YouTube Ads) |
 
-> `remotion`, `excalidraw`, and `playwright` (also added in Task 004) need **no secrets**.
+> `remotion`, `excalidraw`, `playwright`, and `cloudflare-observability` (also added in Task 004)
+> need **no secrets** — Cloudflare authenticates via browser OAuth (`mcp-remote`) on first connect.
+> `google-analytics` adds no new Bitwarden secret: it reuses `GOOGLE_PROJECT_ID` plus the
+> per-machine path `GOOGLE_APPLICATION_CREDENTIALS` (a service-account JSON kept off git, like
+> `gcp-oauth.keys.json`).
 
-Stay in `envs/.env` (NOT secret, per-machine): `APOLLO_MCP_PATH`, `GDRIVE_CREDS_DIR`.
+Stay in `envs/.env` (NOT secret, per-machine): `APOLLO_MCP_PATH`, `GDRIVE_CREDS_DIR`, `GOOGLE_APPLICATION_CREDENTIALS`.
 
 ## How it wires in (no Makefile rewrite needed)
 
