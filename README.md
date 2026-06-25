@@ -1,6 +1,6 @@
 # smmt-internal-tooling
 
-Internal tooling that connects **ten MCP servers** to a local **OpenClaw** agent — sales/marketing prospecting, CRM, email, and ad-platform automation through natural-language instructions. Setup is driven by a `Makefile`; secrets live in `envs/.env`; the full reference lives in `docs/`.
+Internal tooling that connects **sixteen MCP servers** to a local **OpenClaw** agent — sales/marketing prospecting, CRM, email, and ad-platform automation through natural-language instructions. Setup is driven by a `Makefile`; secrets live in `envs/.env`; the full reference lives in `docs/`.
 
 ---
 
@@ -53,7 +53,7 @@ smmt-internal-tooling/
 ├── data/
 │   └── .gitkeep                         # placeholder (exports, scratch data, etc.)
 ├── config/
-│   └── all.services.json                # all 10 MCP servers; values read from envs/.env
+│   └── all.services.json                # all 16 MCP servers; values read from envs/.env
 ├── envs/
 │   └── .env                             # your credentials (stubbed; fill these in)
 ├── Makefile                             # install / render / load / verify automation
@@ -61,7 +61,7 @@ smmt-internal-tooling/
 └── README.md
 ```
 
-The ten servers: `apollo`, `hubspot`, `linkedin`, `upwork`, `google-drive`, `gmail`, `meta-ads` (Facebook + Instagram), `x`, `youtube`, `youtube-ads`.
+The sixteen servers: `apollo`, `hubspot`, `linkedin`, `upwork`, `google-drive`, `gmail`, `meta-ads` (Facebook + Instagram), `x`, `youtube`, `youtube-ads`, `remotion` (programmatic-video docs/MCP), `excalidraw` (diagrams), `playwright` (browser automation), `fal` (fal.ai image/video/audio generation), `google-analytics` (GA4 reporting), `cloudflare-observability` (Workers logs/analytics). No-credential servers: `remotion`, `excalidraw`, `playwright`, and `cloudflare-observability` (browser OAuth on first connect). `fal` needs `FAL_KEY`; `google-analytics` reuses `GOOGLE_PROJECT_ID` + the `GOOGLE_APPLICATION_CREDENTIALS` path.
 
 > `config/all.services.json` is a **template** — its values are `${VAR}` references. `make config` substitutes them from `envs/.env` into a rendered file and merges that into OpenClaw's config. You only ever edit `envs/.env`.
 
