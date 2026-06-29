@@ -31,7 +31,7 @@ make verify                      # openclaw mcp list — all 10 servers should a
 ## Secret naming (key == env var name, 1:1)
 
 `bws run` exposes each secret as an env var **named exactly its Bitwarden key**, and the
-services template substitutes those names. So create these 19 secrets with these exact keys:
+services template substitutes those names. So create these 18 secrets with these exact keys:
 
 | Bitwarden secret key | Service | Notes |
 |---|---|---|
@@ -45,16 +45,8 @@ services template substitutes those names. So create these 19 secrets with these
 | `X_API_KEY` / `X_API_SECRET` / `X_ACCESS_TOKEN` / `X_ACCESS_TOKEN_SECRET` | X | organic only |
 | `YOUTUBE_API_KEY` | YouTube | Data API v3 key |
 | `GOOGLE_PROJECT_ID` / `GOOGLE_ADS_DEVELOPER_TOKEN` | YouTube Ads | read-only server |
-| `FAL_KEY` | Fal.ai | image/video/audio generation (new in Task 004) |
-| `GOOGLE_PROJECT_ID` | Google Analytics | reused by the GA4 server (same secret as YouTube Ads) |
 
-> `remotion`, `excalidraw`, `playwright`, and `cloudflare-observability` (also added in Task 004)
-> need **no secrets** — Cloudflare authenticates via browser OAuth (`mcp-remote`) on first connect.
-> `google-analytics` adds no new Bitwarden secret: it reuses `GOOGLE_PROJECT_ID` plus the
-> per-machine path `GOOGLE_APPLICATION_CREDENTIALS` (a service-account JSON kept off git, like
-> `gcp-oauth.keys.json`).
-
-Stay in `envs/.env` (NOT secret, per-machine): `APOLLO_MCP_PATH`, `GDRIVE_CREDS_DIR`, `GOOGLE_APPLICATION_CREDENTIALS`.
+Stay in `envs/.env` (NOT secret, per-machine): `APOLLO_MCP_PATH`, `GDRIVE_CREDS_DIR`.
 
 ## How it wires in (no Makefile rewrite needed)
 
