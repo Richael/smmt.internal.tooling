@@ -1,9 +1,0 @@
-# Remotion / Node
-remotion/node_modules/
-remotion/out/
-remotion/.remotion/
-*.log
-
-# narration audio is reproducible via narration/build-narration.sh (macOS),
-# but we commit it so the MP4 renders from a fresh checkout without macOS.
-# (durations.json MUST stay committed — the Remotion timeline reads it.)
