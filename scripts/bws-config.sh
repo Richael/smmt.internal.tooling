@@ -1,14 +1,22 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# bws-config.sh — render + load the 10 MCP servers into OpenClaw, with all
-# credentials pulled LIVE from Bitwarden Secrets Manager (nothing secret on disk
-# except OpenClaw's own rendered config, which is git-ignored).
+# bws-config.sh — render + register the 16 MCP servers into OpenClaw, with all
+# credentials pulled LIVE from Bitwarden Secrets Manager.
 #
 # How it works:
 #   `bws run` injects every secret in the project as an env var, then runs
 #   `make config`. The Makefile's `render` step substitutes ${VAR} in
 #   config/all.services.json from the environment — so the injected secrets
-#   resolve, and envs/.env only needs the two non-secret machine PATHS.
+#   resolve, and envs/.env only needs the non-secret machine PATHS. `make config`
+#   then runs scripts/load-mcp.sh, which registers each server one at a time via
+#   `openclaw mcp set` (OpenClaw's native mcp.servers store); servers whose creds
+#   are still empty are skipped.
+#
+# Secrets-at-rest note: resolved values are materialized to disk in the rendered
+# config (config/all.services.rendered.json, git-ignored) and in OpenClaw's own
+# ~/.openclaw/openclaw.json (mcp.servers.<name>.env, outside the repo). Bitwarden
+# is the source of truth / distribution — not a guarantee that nothing lands on
+# disk. `make clean` removes the rendered artifact.
 #
 # Usage:
 #   export BWS_ACCESS_TOKEN=...        # the openclaw-runner machine-account token
