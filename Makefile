@@ -20,7 +20,7 @@ NORM_DIR     := data/normalized
 EXAMPLES_DIR := tools/extractors/examples/raw
 
 .DEFAULT_GOAL := help
-.PHONY: help doctor install env check-env render config load verify \
+.PHONY: help doctor install env check-env render config config-dry load verify \
         normalize validate auth-gmail auth-gdrive auth-youtube upwork-login clean all
 
 help: ## Show this help
@@ -66,16 +66,14 @@ render: ## Render config/all.services.json from envs/.env -> rendered config
 		grep -oE '<<UNSET:[A-Z_]+>>' $(RENDERED) | sort -u | sed 's/^/  /'; fi
 	@python3 -c "import json; json.load(open('$(RENDERED)')); print('Rendered -> $(RENDERED) (valid JSON)')"
 
-config: render ## Render, then merge the MCP servers into OpenClaw (with backup)
+config: render ## Render, then register the MCP servers into OpenClaw (native mcp.servers)
 	@mkdir -p $(dir $(OPENCLAW_CFG))
-	@if [ -f $(OPENCLAW_CFG) ]; then \
-		cp $(OPENCLAW_CFG) $(OPENCLAW_CFG).bak; \
-		echo "Backed up -> $(OPENCLAW_CFG).bak"; \
-		jq -s '.[0] * .[1]' $(OPENCLAW_CFG) $(RENDERED) > $(OPENCLAW_CFG).tmp && mv $(OPENCLAW_CFG).tmp $(OPENCLAW_CFG); \
-	else \
-		cp $(RENDERED) $(OPENCLAW_CFG); echo "Created $(OPENCLAW_CFG)"; \
-	fi
-	@echo "Merged MCP servers into $(OPENCLAW_CFG). Restart the Gateway, then 'make verify'."
+	@if [ -f $(OPENCLAW_CFG) ]; then cp $(OPENCLAW_CFG) $(OPENCLAW_CFG).bak; echo "Backed up -> $(OPENCLAW_CFG).bak"; fi
+	@bash scripts/load-mcp.sh $(RENDERED)
+	@echo "Registered via 'openclaw mcp set' (servers with empty creds are skipped). Then 'make verify'."
+
+config-dry: render ## Show which servers WOULD register, without changing OpenClaw
+	@DRY_RUN=1 bash scripts/load-mcp.sh $(RENDERED)
 
 load: config ## Alias for 'config'
 	@true
