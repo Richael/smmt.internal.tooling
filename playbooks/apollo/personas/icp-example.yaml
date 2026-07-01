@@ -1,0 +1,30 @@
+# Reusable persona / ICP filter spec.
+# Apollo's MCP cannot store a "Persona" object, so the persona lives here and is replayed
+# into `search_people` filters. Copy this file per ICP (e.g. personas/dtc-founders.yaml).
+
+name: "B2B SaaS Marketing Leaders"
+slug: "saas-marketing-leaders"          # used in export filenames
+description: >
+  Marketing decision-makers at mid-market US B2B SaaS companies showing a hiring signal.
+
+# --- people filters (map to search_people) ---
+titles:
+  - "VP Marketing"
+  - "Director of Marketing"
+  - "Head of Growth"
+seniorities: ["vp", "director", "head"]
+locations: ["United States"]
+
+# --- company filters (map to search_organizations / org filters) ---
+company:
+  employee_count: { min: 50, max: 500 }
+  industries: ["computer software", "information technology & services"]
+
+# --- signals (best-effort; Apollo MCP exposes these via org/news endpoints) ---
+signals:
+  job_postings_within_days: 30          # via get_organization_job_postings
+  recent_news_keywords: ["funding", "Series B", "new CMO"]   # via search_news_articles
+
+# --- run config ---
+enrich_top_n: 100                        # enrich costs ~1 credit each; search is free
+label: "ICP — SaaS Marketing Leaders"    # Apollo label applied to created contacts (shows in UI)

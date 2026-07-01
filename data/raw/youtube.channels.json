@@ -1,0 +1,3 @@
+{"source":"youtube","tool":"get_channel","data":{"items":[
+  {"id":"UC123","snippet":{"title":"Wax Future","country":"US"},"statistics":{"subscriberCount":"15400","viewCount":"982340"}}
+]}}

@@ -1,0 +1,16 @@
+{
+  "00_intro": { "seconds": 25.124036, "title": "Intro" },
+  "01_loop-1-attribution-then-segment-then-re-seed": { "seconds": 28.374830, "title": "Loop 1 — Attribution then Segment then Re-seed" },
+  "02_loop-2-purchase-post-purchase-repurchase": { "seconds": 19.411927, "title": "Loop 2 — Purchase, Post-purchase, Repurchase" },
+  "03_loop-3-abandoned-checkout-multi-channel-recovery": { "seconds": 22.128662, "title": "Loop 3 — Abandoned-checkout multi-channel recovery" },
+  "04_loop-4-lead-gen-nurture-meta-to-customer": { "seconds": 22.337642, "title": "Loop 4 — Lead-gen nurture, Meta to customer" },
+  "05_loop-5-server-side-conversion-optimization": { "seconds": 26.006395, "title": "Loop 5 — Server-side conversion optimization" },
+  "06_loop-6-suppression-and-exclusion-hygiene": { "seconds": 19.133288, "title": "Loop 6 — Suppression and exclusion hygiene" },
+  "07_loop-7-predictive-value-tiering": { "seconds": 22.453741, "title": "Loop 7 — Predictive value tiering" },
+  "08_loop-8-consent-and-identity-propagation": { "seconds": 21.664263, "title": "Loop 8 — Consent and identity propagation" },
+  "09_loop-9-off-amazon-demand-to-amazon-conversion": { "seconds": 27.051293, "title": "Loop 9 — Off-Amazon demand to Amazon conversion" },
+  "10_loop-10-cross-platform-syndication-and-lookalike-fan-out": { "seconds": 23.103900, "title": "Loop 10 — Cross-platform syndication and lookalike fan-out" },
+  "11_loop-11-amazon-native-retention-and-win-back": { "seconds": 24.102358, "title": "Loop 11 — Amazon-native retention and win-back" },
+  "12_loop-12-unified-profile-and-insight-enrichment": { "seconds": 27.863991, "title": "Loop 12 — Unified profile and insight enrichment" },
+  "13_outro": { "seconds": 20.572925, "title": "Outro" }
+}

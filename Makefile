@@ -14,9 +14,14 @@ RENDERED     := config/all.services.rendered.json
 OPENCLAW_CFG := $(HOME)/.openclaw/openclaw.json
 REQUIRED_TOOLS := node npm npx uv uvx pipx jq perl openclaw mcporter
 
+NORMALIZE    := tools/extractors/normalize.py
+RAW_DIR      := data/raw
+NORM_DIR     := data/normalized
+EXAMPLES_DIR := tools/extractors/examples/raw
+
 .DEFAULT_GOAL := help
-.PHONY: help doctor install env check-env render config load verify \
-        auth-gmail auth-gdrive auth-youtube upwork-login clean all
+.PHONY: help doctor install env check-env render config config-dry load verify \
+        normalize validate auth-gmail auth-gdrive auth-youtube upwork-login clean all
 
 help: ## Show this help
 	@echo "smmt-internal-tooling — make targets:"
@@ -61,16 +66,14 @@ render: ## Render config/all.services.json from envs/.env -> rendered config
 		grep -oE '<<UNSET:[A-Z_]+>>' $(RENDERED) | sort -u | sed 's/^/  /'; fi
 	@python3 -c "import json; json.load(open('$(RENDERED)')); print('Rendered -> $(RENDERED) (valid JSON)')"
 
-config: render ## Render, then merge the MCP servers into OpenClaw (with backup)
+config: render ## Render, then register the MCP servers into OpenClaw (native mcp.servers)
 	@mkdir -p $(dir $(OPENCLAW_CFG))
-	@if [ -f $(OPENCLAW_CFG) ]; then \
-		cp $(OPENCLAW_CFG) $(OPENCLAW_CFG).bak; \
-		echo "Backed up -> $(OPENCLAW_CFG).bak"; \
-		jq -s '.[0] * .[1]' $(OPENCLAW_CFG) $(RENDERED) > $(OPENCLAW_CFG).tmp && mv $(OPENCLAW_CFG).tmp $(OPENCLAW_CFG); \
-	else \
-		cp $(RENDERED) $(OPENCLAW_CFG); echo "Created $(OPENCLAW_CFG)"; \
-	fi
-	@echo "Merged MCP servers into $(OPENCLAW_CFG). Restart the Gateway, then 'make verify'."
+	@if [ -f $(OPENCLAW_CFG) ]; then cp $(OPENCLAW_CFG) $(OPENCLAW_CFG).bak; echo "Backed up -> $(OPENCLAW_CFG).bak"; fi
+	@bash scripts/load-mcp.sh $(RENDERED)
+	@echo "Registered via 'openclaw mcp set' (servers with empty creds are skipped). Then 'make verify'."
+
+config-dry: render ## Show which servers WOULD register, without changing OpenClaw
+	@DRY_RUN=1 bash scripts/load-mcp.sh $(RENDERED)
 
 load: config ## Alias for 'config'
 	@true
@@ -78,6 +81,13 @@ load: config ## Alias for 'config'
 verify: ## List the MCP servers OpenClaw can see
 	@command -v openclaw >/dev/null 2>&1 || { echo "openclaw not found — install it first"; exit 1; }
 	openclaw mcp list
+
+normalize: ## Map raw MCP output -> normalized records (data/raw -> data/normalized, +CSV)
+	@test -d $(RAW_DIR) || { echo "Missing $(RAW_DIR)/ — let OpenClaw save raw tool output there first"; exit 1; }
+	python3 $(NORMALIZE) --input $(RAW_DIR) --out $(NORM_DIR) --csv
+
+validate: ## Normalize the bundled sample fixtures (no live keys) -> /tmp/norm
+	python3 $(NORMALIZE) --input $(EXAMPLES_DIR) --out /tmp/norm --csv
 
 auth-gmail: ## One-time Gmail OAuth (browser). Put gcp-oauth.keys.json in ~/.gmail-mcp/
 	@mkdir -p $$HOME/.gmail-mcp

@@ -1,0 +1,26 @@
+# ── secrets — never commit ───────────────────────────────────────────────
+# Real credentials live in Bitwarden Secrets Manager, injected at runtime via `bws run`.
+config/.env
+envs/.env
+config/*.rendered.json
+config/all.services.rendered.json
+*.bak
+*.bak.json
+
+# google oauth material
+**/gcp-oauth.keys.json
+.gmail-mcp/
+.gdrive-server-credentials.json
+
+# scratch / exports
+data/*
+!data/.gitignore
+
+# python
+__pycache__/
+*.py[cod]
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/

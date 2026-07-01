@@ -1,0 +1,2 @@
+{"entity_type": "organization", "id": "o1", "source": "apollo", "source_tool": "search_organizations", "attributes": {"name": "Acme", "domain": "acme.io", "industry": "software", "size": 120, "location": "Austin"}, "extracted_at": "2026-06-22T16:39:12Z", "schema_version": "1.0"}
+{"entity_type": "organization", "id": "UC123", "source": "youtube", "source_tool": "get_channel", "attributes": {"name": "Wax Future", "website": "https://youtube.com/channel/UC123", "location": "US"}, "extracted_at": "2026-06-22T16:39:12Z", "schema_version": "1.0"}

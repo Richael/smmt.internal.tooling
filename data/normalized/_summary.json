@@ -1,0 +1,22 @@
+{
+  "total": 9,
+  "by_entity": {
+    "audience": 1,
+    "behavior_event": 1,
+    "organization": 2,
+    "person": 4,
+    "transaction": 1
+  },
+  "by_source": {
+    "apollo": 3,
+    "hubspot": 3,
+    "youtube": 3
+  },
+  "target_data_points": {
+    "audience": "audiences",
+    "behavior_event": "behavior",
+    "organization": "customers / customer information",
+    "person": "customers / customer information",
+    "transaction": "transaction history"
+  }
+}

@@ -1,0 +1,4 @@
+{"source":"hubspot","tool":"crm_deals_search","data":{"results":[
+  {"id":"ex_d1","properties":{"dealname":"Northstar annual","amount":"36000","dealstage":"closedwon","closedate":"2026-05-15","deal_currency_code":"USD"}},
+  {"id":"ex_d2","properties":{"dealname":"Harbor pilot","amount":"5000","dealstage":"presentationscheduled","createdate":"2026-06-01","deal_currency_code":"USD"}}
+]}}

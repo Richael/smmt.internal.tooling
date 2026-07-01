@@ -1,0 +1,5 @@
+id,source,source_tool,extracted_at,email,full_name,first_name,last_name,title,company,company_domain,linkedin_url,location,phone,tags
+p1,apollo,search_people,2026-06-22T16:39:12Z,dana@acme.io,Dana Lee,Dana,Lee,VP Marketing,Acme,acme.io,https://linkedin.com/in/danalee,Austin,+15125550001,
+p2,apollo,search_people,2026-06-22T16:39:12Z,sam@globex.com,Sam Ng,Sam,Ng,Director of Growth,Globex,globex.com,,,,
+101,hubspot,crm_contacts_search,2026-06-22T16:39:12Z,jo@northwind.com,Jo Park,Jo,Park,Head of RevOps,Northwind,,,Denver,,"[""lead""]"
+102,hubspot,crm_contacts_search,2026-06-22T16:39:12Z,kit@umbrella.co,Kit Rao,Kit,Rao,,,,,,,"[""customer""]"

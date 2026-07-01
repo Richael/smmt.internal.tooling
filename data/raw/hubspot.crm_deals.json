@@ -1,0 +1,3 @@
+{"source":"hubspot","tool":"crm_deals_search","data":{"results":[
+  {"id":"d1","properties":{"dealname":"Acme annual","amount":"24000","dealstage":"closedwon","closedate":"2026-05-30","deal_currency_code":"USD"}}
+]}}
